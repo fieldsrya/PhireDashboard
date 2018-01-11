@@ -3,7 +3,7 @@ import phiredashboard
 
 class orcl:
     username = 'SYSADM'
-    password = 'qADU8a3n'
+    password = '******'
     databaseName = "PSPHIRE1"
 
     dsn = (username,password,databaseName)
