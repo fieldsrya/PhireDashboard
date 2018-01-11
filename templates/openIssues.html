@@ -8,18 +8,18 @@
         $(document).ready(function () {
             $('#openiss').DataTable({
                 ajax : {
-                    url: '/openIssues',
+                    url: '/dash/openIssues',
                     dataSrc: ''
                 },
-                select: true
+                select: false
             });
 
             $('#opencr').DataTable({
                 ajax : {
-                    url: '/openCR',
+                    url: '/dash/openCR',
                     dataSrc: ''
                 },
-                select: true
+                select: false
             });
 
         });
@@ -31,13 +31,54 @@
         setInterval( function() {
             $('#opencr').DataTable().ajax.reload(null, false);
         }, 60000);
+
+	function decode_flask_cookie(val) {
+    	//if (val.indexOf('\\') === -1) {
+        //	return val;  // not encoded
+    	//}
+    	val = val.slice(1, -1).replace(/\\"/g, '"');
+    	val = val.replace(/\\(\d{3})/g, function(match, octal) { 
+        	return String.fromCharCode(parseInt(octal, 8));
+    		});
+    	  	return val.replace(/\\\\/g, '\\');
+	}
+
+	function getCookie(cname) {
+	    var name = cname + "=";
+	    var decodedCookie = decodeURIComponent(document.cookie);
+	    var ca = decodedCookie.split(';');
+	    for(var i = 0; i <ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0) == ' ') {
+	            c = c.substring(1);
+	        }
+	        if (c.indexOf(name) == 0) {
+	            return c.substring(name.length, c.length);
+	        }
+	    }
+	    return "";
+	}
+
+	var pstok = getCookie('PS_TOKEN');
+	newPSTok = decode_flask_cookie(pstok);
+	document.cookie = "PS_TOKEN=" + newPSTok + ";domain=.manage.catalystnpd.uc.edu;path=/"
     </script>
 </head>
 <body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" >Phool</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="dispIssues">Dashboard</a></li>
+      <li><a href="refreshIssues">Project Migrations</a></li>
+    </ul>
+  </div>
+</nav>
+
+
     <div class="container">
-        <div class="header">
-            <h3>Phire Dashboard</h3>
-        </div>
 
         <div class="jumbotron">
             <h3>Open Issues</h3>

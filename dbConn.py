@@ -2,9 +2,9 @@ import cx_Oracle
 import phiredashboard
 
 class orcl:
-    username = '******'
-    password = '*****'
-    databaseName = "******"
+    username = 'SYSADM'
+    password = 'qADU8a3n'
+    databaseName = "PSPHIRE1"
 
     dsn = (username,password,databaseName)
 
@@ -19,27 +19,38 @@ class orcl:
         if self.db:
             self.db.close()
 
-    def printException (exception):
-        error, = exception.args
-        printf ("Error code = %s\n",error.code);
-        printf ("Error message = %s\n",error.message);
+    def printException (self, exception):
+        error = exception.args
+        print ("Error code = %s\n",error.code);
+        print ("Error message = %s\n",error.message);
 
-    def dbExecuteFetchAll(self,sql):
+    def dbExecuteFetchAll(self, sql, params=None):
         try:
-            self.cursor.execute (sql)
-            data = self.cursor.fetchall()
-            return data
+            if params is not None:
+              self.cursor.execute (sql, params)
+              data = self.cursor.fetchall()
+              return data
+            else:
+              self.cursor.execute (sql)
+              data = self.cursor.fetchall()
+              return data
         except cx_Oracle.DatabaseError as exception:
-            printf ('Failed to execute query on %s\n',databaseName)
-            printException (exception)
+            print ('Failed to execute query on database: ', self.databaseName)
+            self.printException (exception)
             exit (1)
 
-    def dbExecuteFetchOne(self,sql):
+    def dbExecuteFetchOne(self, sql, params=None):
         try:
-            self.cursor.execute (sql)
-            data = self.cursor.fetchone()
-            return data
+            if params is not None:
+              self.cursor.execute (sql, params)
+              data = self.cursor.fetchone()
+              return data
+            else:
+              self.cursor.execute (sql)
+              data = self.cursor.fetchone()
+              return data
+		
         except cx_Oracle.DatabaseError as exception:
-            printf ('Failed to execute query on %s\n',databaseName)
-            printException (exception)
+            print ('Failed to execute query on database: ',self.databaseName)
+            self.printException (exception)
             exit (1)
